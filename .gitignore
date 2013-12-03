@@ -1,0 +1,16 @@
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+_obuild
+*._d
+ocp-build.root*
+src/main
+TODO
+notes
+*#*

@@ -1,0 +1,8 @@
+version = "0.1"
+
+copyright = [ "" ]
+authors = [
+    "Pierre Chambart <pierre.chambart@ocamlpro.com>"
+]
+
+license = [ "MIT" ]
