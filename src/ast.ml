@@ -63,6 +63,7 @@ let expr_loc = function
   | Bool_binop (_,_,_,l)
   | Eobject (_,l)
   | Not (_,l) -> l
+  | Str (_,l) -> l
 
 type alias =
   { alias_id : id;

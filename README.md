@@ -10,10 +10,10 @@ http://optal.ocamlpro.com/
  - uutf: http://erratique.ch/software/uutf
 
 ### Installing dependencies with opam
-    $ opam install menhir jsonm uutf
+    $ opam install ocp-build menhir jsonm uutf
 
 ## Compiling
-    $ make -C src
+    $ ocp-build -init
 
 ## Test
-    $ src/main test/gas.opl test/gas.json
+    $ _obuild/optal/optal.asm test/gas.opl test/gas.json
