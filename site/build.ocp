@@ -1,0 +1,7 @@
+begin program "site"
+  asm = false
+  sort = true
+  pp = [ ... ]
+  files = [ "site_main.ml" "utils.ml" ]
+  requires = [ "optal-lib" ]
+end
