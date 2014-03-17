@@ -5,7 +5,7 @@ begin library "optal-lib"
   sort = true
   files = [
     pack Optal [
-    "optal_version.ml" (ocp2ml)
+    "optal_version.ml" (ocp2ml = true)
     "common_types.ml"
     "loc.ml"
     "expr.ml"

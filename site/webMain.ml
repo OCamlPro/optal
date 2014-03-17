@@ -1,4 +1,4 @@
-open Optal_lib
+open Optal
 
 (**** error printing *****)
 
