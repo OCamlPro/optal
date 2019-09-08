@@ -1,19 +1,33 @@
-Optal
-===========
+# optal
 
-Optal compiler
-http://optal.ocamlpro.com/
+[optal] compiler.  A new language for optimization.
 
-## Dependencies:
- - menhir: http://gallium.inria.fr/~fpottier/menhir/
- - jsonm: http://erratique.ch/software/jsonm
- - uutf: http://erratique.ch/software/uutf
+## License
 
-### Installing dependencies with opam
-    $ opam install ocp-build menhir jsonm uutf
+    optal
+    Copyright (C) 2013-2020 OCamlPro
 
-## Compiling
-    $ ocp-build -init
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-## Test
-    $ _obuild/optal/optal.asm test/gas.opl test/gas.json
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+See [LICENSE] for details.
+
+## Quickstart
+
+```sh
+dune build @all
+dune exec src/optal.exe -- test/gas.opl test/gas.json
+```
+
+[LICENSE]: ./LICENSE.md
+[optal]: https://optal.ocamlpro.com

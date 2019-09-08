@@ -50,8 +50,8 @@ module Value = struct
   type t = value
 
   let rec compare v1 v2 = match v1,v2 with
-    | Vint i1, Vint i2 -> Pervasives.compare i1 i2
-    | Vstring s1, Vstring s2 -> Pervasives.compare s1 s2
+    | Vint i1, Vint i2 -> Stdlib.compare i1 i2
+    | Vstring s1, Vstring s2 -> Stdlib.compare s1 s2
     | Vobj o1, Vobj o2 -> compare_obj o1 o2
     | Vlp_exp e1, Vlp_exp e2 -> Expr.compare e1 e2
     | Varray a1, Varray a2 -> compare_array a1 a2
