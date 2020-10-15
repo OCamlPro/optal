@@ -1,5 +1,3 @@
-open Optal
-
 (**** error printing *****)
 
 type error =
