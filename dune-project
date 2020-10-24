@@ -21,7 +21,7 @@
  (description "A new language for optimization ")
  (depends
   (ocaml
-   (>= 4.05))
+   (>= 4.07))
   (dune
    (>= 2.0))
   (menhir
