@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <meta name="description"
+  content="Optal is a language that allows to describe linear optimisation problems." />
+  <meta name="keywords"
+  content="" />
+      <title> optal </title>
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+   <div class="navbar-inner">
+     <div class="container">
+       <a class="brand" href="http://www.ocamlpro.com/">OCamlPro</a>
+       <ul class="nav pull-right">
+         <li><a href="index.html">Optal</a></li>
+         <li><a href="language.html">Language</a></li>
+         <li><a href="try-optal.html">Try Online</a></li>
+       </ul>
+    </div>
+  </div>
+</div>
+<div class="content">
+    <div class="container">
+
+
+<body>
+<h1>Optal</h1>
+<div class="row">
+  <div class="span8">
+    <p class="lead">A language for linear optimization.</p>
+
+    <p>Optal is a language designed to easily describe linear optimisation
+    problems.</p>
+
+    <p>We provide a compiler to translate this language into an LP file,
+    when given a set of data in the JSON format. The LP file can be used
+    by many optimization engines to solve the problem.</p>
+
+    <p>Our compiler is free-software (GPLv3).</p>
+  </div>
+  <div class="span4">
+    <a class="btn btn-large btn-success btn-block" href="https://github.com/OCamlPro/optal/releases">
+    <i class="icon-arrow-down icon-white"></i> Download
+  </a>
+    Current version: 0.1 (Dec 4, 2013)
+    </div>
+      </div>
+
+      <h2>Language</h2>
+
+      <p>We provide a <a href="language.html">short description</a> of the Optal language.</p>
+
+      <p>The benefits of using Optal are:</p>
+<ul>
+  <li>A more expressive language for constraints</li>
+  <li>A separation of the problem and the data</li>
+  <li>Data files are in JSON format</li>
+</ul>
+
+
+      <h2>A Simple Example</h2>
+
+      <p>Giapetto wants to know how many numbers of wooden trains and soldiers he should build each week to maximize its profit.</p>
+
+    <p>This problem can be described with the following Optal program (that we store in <code>test.opl</code>):</p>
+
+    <pre>dvar int Production[Products]
+
+maximize sum(p in Products) Profit[p] * Production[p]
+
+constraints {
+  forall(prod in Production) prod &gt;= 0;
+  sum(p in Products) Need[p].time * Production[p] &lt;= 5 * 7;
+  sum(p in Products) Need[p].wood * Production[p] &lt;= 30;
+}</pre>
+
+<p>We can provide a JSON data file in <code>test.json</code>:</p>
+
+      <pre>{ "Products" : [ "soldier", "train" ],
+               "Profit" : { "soldier" : 3, "train" : 2 },
+               "Need" : { "soldier" : { "wood" : 1, "time" : 1.85 },
+                            "train" :   { "wood" : 1, "time" : 1 } } }</pre>
+
+<p>We can now use the <code>optal</code> compiler to generate an LP
+file for our solver:</p>
+
+ <pre>% optal test.json test.opl  > test.lp</pre>
+
+<p>The generated file looks like:</p>
+
+<pre>Maximize
+  3. Production_soldier + 2. Production_train
+
+Subject to
+  Production_train >= 0
+  Production_soldier >= 0
+  1.85 Production_soldier + Production_train <= 35.
+  Production_soldier + Production_train <= 30.
+
+Integer
+  Production_train
+  Production_soldier
+
+End
+</pre>
+
+<p>Finally, we can call a solver (here, <code>glpsol</code> provided by the
+Debian <code>glpk</code> package):</p>
+
+<pre>glpsol --lp test.lp -o test.result</pre>
+
+<p>The output is:</p>
+
+<pre>GLPSOL: GLPK LP/MIP Solver, v4.45
+Parameter(s) specified in the command line:
+ --lp test.lp -o test.result
+Reading problem data from `test.lp'...
+4 rows, 2 columns, 6 non-zeros
+2 integer variables, none of which are binary
+14 lines were read
+GLPK Integer Optimizer, v4.45
+4 rows, 2 columns, 6 non-zeros
+2 integer variables, none of which are binary
+Preprocessing...
+2 rows, 2 columns, 4 non-zeros
+2 integer variables, none of which are binary
+Scaling...
+ A: min|aij| =  1.000e+00  max|aij| =  1.850e+00  ratio =  1.850e+00
+Problem data seem to be well scaled
+Constructing initial basis...
+Size of triangular part = 2
+Solving LP relaxation...
+GLPK Simplex Optimizer, v4.45
+2 rows, 2 columns, 4 non-zeros
+*     0: obj =   0.000000000e+00  infeas =  0.000e+00 (0)
+*     3: obj =   6.588235294e+01  infeas =  0.000e+00 (0)
+OPTIMAL SOLUTION FOUND
+Integer optimization begins...
++     3: mip =     not found yet <=              +inf        (1; 0)
++     5: >>>>>   6.500000000e+01 <=   6.500000000e+01   0.0% (5; 0)
++     5: mip =   6.500000000e+01 <=     tree is empty   0.0% (0; 9)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   0.0 secs
+Memory used: 0.1 Mb (64671 bytes)
+Writing MIP solution to `test.result'...
+</pre>
+
+<p>and the solution, available in <code>test.result</code>:</p>
+
+<pre>Problem:
+Rows:       4
+Columns:    2 (2 integer, 0 binary)
+Non-zeros:  6
+Status:     INTEGER OPTIMAL
+Objective:  obj = 65 (MAXimum)
+
+   No.   Row name        Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 r.5                        22             0
+     2 r.6                         7             0
+     3 r.7                     34.95                          35
+     4 r.8                        29                          30
+
+   No. Column name       Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 Production_soldier
+                    *              7             0
+     2 Production_train
+                    *             22             0
+
+Integer feasibility conditions:
+
+KKT.PE: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+KKT.PB: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+End of output
+</pre>
+
+    <h2>Compilation and Installation</h2>
+
+    <p>First, we need to install the dependencies, using
+the <a href="http://opam.ocaml.org/">OPAM package manager</a>:</p>
+
+        <pre>opam install uutf jsonm menhir</pre>
+        <pre>opam install ocp-build</pre>
+
+        <p>Now, we can compile <code>optal</code>:</p>
+
+      <pre>ocp-build -init
+ocp-build</pre>
+
+      <p>We can now install the binary:</p>
+
+        <pre>cp _obuild/optal/optal.asm /usr/local/bin/optal</pre>
+
+        <h2>Resources</h2>
+        <a id="downloads"></a>
+
+<table class="table table-striped">
+<tr>
+  <td>
+    <a href="https://github.com/OCamlPro/optal">
+      Optal on GitHub
+    </a>
+  </td>
+  <td>
+    Git Repository of the Optal compiler on GitHub
+  </td>
+</tr>
+<tr>
+  <td>
+    <a href="https://github.com/OCamlPro/optal/issues">
+      Optal Issues
+    </a>
+  </td>
+  <td>
+    Optal Bug Tracker
+  </td>
+</tr>
+<tr>
+  <td>
+    <a href="https://github.com/OCamlPro/optal/releases">
+      Optal Releases
+    </a>
+  </td>
+  <td>
+    Optal Source Archives
+  </td>
+</tr>
+</table>
+
+
+ </div>
+</div>
+
+<div class="footer">
+ <div class="container">
+  <div class="copyright">
+    © 2013-2014 OCamlPro SAS, All rights reserved.
+    <a href="mailto:contact@ocamlpro.com">Contact an administrator</a>.
+    <a href="http://www.ocamlpro.com/company/legal.html">Legal</a>
+  </div>
+ </div>
+</div>
+
+  </body>
+</html>

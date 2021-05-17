@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta charset="utf-8">
+  <meta name="description"
+  <meta name="keywords"
+  content="" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+    <title>Try Optal</title>
+    <meta name="description" content="optal online testing website">
+    <script src="FileSaver.js"></script>
+    <script async="async" src="optal-web-client.js"></script>
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+   <div class="navbar-inner">
+     <div class="container">
+       <a class="brand" href="http://www.ocamlpro.com/">OCamlPro</a>
+       <ul class="nav pull-right">
+         <li><a href="index.html">Optal</a></li>
+         <li><a href="language.html">Language</a></li>
+         <li><a href="try-optal.html">Try Online</a></li>
+       </ul>
+    </div>
+  </div>
+</div>
+<div class="content">
+    <div class="container">
+
+<!-- BEGIN CONTENT -->
+
+    <h1>Optal online</h1>
+    <p>This interface can be used to test Optal: you can write a
+specification of your problem in Optal, load a JSON data file, and
+generate the corresponding LP problem. You can then download that
+file and run your favorite solver on it.</p>
+
+    <table>
+    <tr>
+     <td>
+      <div>Optal script:<br/>
+       <span><button id="clear-optal-button" class="btn btn-large">Clear</button></span>
+       <span class="btn btn-default btn-file"><input type="file" id="upload-optal"/></span>
+      </div>
+     </td>
+     <td>
+      <div>Data in JSON:<br/>
+       <span><button id="clear-data-button" class="btn btn-large">Clear</button></span>
+       <span class="btn btn-default btn-file"><input type="file" id="upload-data"/></span>
+      </div>
+     </td>
+     <td>
+      <div>Generated LP:<br/>
+       <span><button id="reset-example-button"  class="btn btn-large">Example</button></span>
+       <span><button id="generate-lp-button" class="btn btn-primary btn-large">Generate</button></span>
+       <span><button id="download-button"  class="btn btn-large">Download</button></span>
+      </div>
+     </td>
+    </tr>
+     <tr>
+     <td>
+      <textarea id="input-optal" style="width:400px;height:400px;" >dvar int Production[Products]
+
+maximize sum(p in Products) Profit[p] * Production[p]
+
+constraints {
+  forall(prod in Production) prod >= 0;
+  sum(p in Products) Need[p].time * Production[p] <= 5 * 7;
+  sum(p in Products) Need[p].wood * Production[p] <= 30;
+}</textarea>
+     </td>
+     <td>
+      <textarea id="input-data"  style="width:400px;height:400px;">{ "Products" : [ "soldier", "train" ],
+               "Profit" : { "soldier" : 3, "train" : 2 },
+               "Need" : { "soldier" : { "wood" : 1, "time" : 1.85 },
+                            "train" :   { "wood" : 1, "time" : 1 } } }</textarea>
+     </td>
+<!--
+     <td>
+      <p>Data processing in OCaml</p>
+      <textarea id="input-ocaml" rows="20"></textarea>
+      <pre id="output-ocaml"></pre>
+     </td>
+-->
+     <td>
+      <textarea id="output-result" readonly  style="width:400px;height:400px;"></textarea>
+     </td>
+    </tr>
+    <tr>
+     <td>
+      <pre id="output-optal" style="width:400px;height:200px;"></pre>
+     </td>
+     <td>
+      <pre id="output-data" style="width:400px;height:200px;"></pre>
+     </td>
+     <td>
+     </td>
+    </tr>
+   </table>
+
+    <script>
+      console.log("after page");
+    </script>
+
+    <div id="output"></div>
+
+<!-- END CONTENT -->
+
+
+</div>
+</div>
+
+<div class="footer">
+ <div class="container">
+  <div class="contribute">
+   <div class="copyright"> © 2014 OCamlPro SAS, All rights reserved.
+       <a href="mailto:contact@ocamlpro.com">Contact an administrator</a>.
+       <a href="http://www.ocamlpro.com/company/legal.html">Legal</a>
+   </div>
+  </div>
+ </div>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,179 @@
+h1 {
+   padding-bottom: 20px;
+}
+
+h2 {
+   padding-top: 25px;
+   padding-bottom: 20px;
+}
+
+h3 {
+   padding-top: 20px;
+   padding-bottom: 15px;
+}
+
+h4 {
+   padding-top: 20px;
+   padding-bottom: 10px;
+}
+
+.index h3, .index h2 {
+   padding-top: 0px;
+}
+
+.index h3 .big {
+   font-size: 24px;
+}
+
+.right {
+       text-align: right;
+}
+
+h4 {
+   padding-bottom: 10px;
+}
+
+h5 {
+   padding-bottom: 5px;
+}
+
+.footer {
+	color: black;
+	background-color: white;
+	font-size: 13px;
+	line-height: 20px;
+	clear: both;
+	overflow: hidden;
+        border-top: 2px solid #e0e0e0;
+        border-bottom: 2px solid #e0e0e0;
+	padding-top: 20px;
+	padding-bottom: 0;
+}
+
+.content {
+	margin-bottom: 40px;
+        margin-top: 40px;
+}
+
+.footer ul {
+        list-style: none;
+}
+
+.footer h4 {
+        border-bottom: 1px solid grey;
+}
+
+.footer h4 a {
+        color: #333;
+}
+
+.footer h4 a:hover {
+        border-bottom: 0;
+}
+
+.footer .copyright {
+        font-size: 10px;
+        clear: both;
+}
+
+.contribute {
+    padding-top: 20px;
+    text-align: center;
+    font-size: 10px;
+    padding-bottom: 5px;
+}
+
+.footer a {
+	color: #08C;
+        text-decoration: none;
+}
+
+.footer a:hover {
+	color: #08C;
+        text-decoration: underline;
+}
+
+.wrap {
+      height: 100%;
+}
+
+body {
+	padding-top: 40px;
+        text-align: justify;
+	background: #F0F0F0;
+	font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, Sans;
+        line-height: 22px;
+        font-size: 15px;
+}
+
+p {
+	font-family: "Droid Sans", "Helvetica Neue", Helvetica, Arial, Sans;
+        line-height: 22px;
+        font-size: 15px;
+}
+
+ul, li {
+        line-height: 22px;
+}
+
+.sidebar-nav {
+        position: fixed;
+}
+
+code {
+     color: black;
+}
+
+pre {
+    background-color: #ccc;
+    color: #000;
+}
+
+.thumbnail {
+   min-height: 410px;
+   text-align: left;
+}
+
+.content li {
+   padding-bottom: 5px;
+}
+
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Droid Sans'), local('DroidSans'), url('http://themes.googleusercontent.com/static/fonts/droidsans/v3/s-BiyweUPV0v-yRb-cjciL3hpw3pgy2gAi-Ip7WPMi0.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: bold;
+  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url('http://themes.googleusercontent.com/static/fonts/droidsans/v3/EFpQQyG9GqCrobXxL-KRMXbFhgvWbfSbdVg11QabG8w.woff') format('woff');
+}
+
+.wtable {
+  width: 80%;
+  border: 1px solid black;
+}
+
+.wtable .version {
+  width: 10%;
+  text-align: center;
+}
+
+.wtable .id {
+  width: 10%;
+  text-align: left;
+}
+
+.wtable td .title {
+  width: 80%;
+  text-align: left;
+}
+
+.wtable th {
+  text-align: center;
+  background: #fed;
+}
+

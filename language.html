@@ -1,0 +1,345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <meta name="description"
+  content="Optal is a language that allows to describe linear optimisation problems." />
+  <meta name="keywords"
+  content="" />
+      <title> optal </title>
+</head>
+<body>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+   <div class="navbar-inner">
+     <div class="container">
+       <a class="brand" href="http://www.ocamlpro.com/">OCamlPro</a>
+       <ul class="nav pull-right">
+         <li><a href="index.html">Optal</a></li>
+         <li><a href="language.html">Language</a></li>
+         <li><a href="try-optal.html">Try Online</a></li>
+       </ul>
+    </div>
+  </div>
+</div>
+<div class="content">
+<div class="container">
+
+  <body>
+    <h1> Description of the Optal Language </h1>
+
+    <h2> Short Tutorial </h2>
+    <h3>Describing Optimization Goals</h3>
+
+    The minimal thing needed to describe a problem is a goal.
+
+    <pre>minimize 3 + 4</pre>
+
+    This describes an expression to be minimized. It is also possible
+    to ask for maximization.
+
+    <pre>maximize 3 + 4</pre>
+
+    This is a particularily uninteresting problem since the objective
+    is a constant, hence there is nothing to optimize. To define the
+    search space, we need variables.
+
+    <pre>
+dvar float x
+maximize x</pre>
+
+    This tells that there is a variable x which has a value in the
+    real set. This won't also provide any insightfull result since
+    there is no maximal value for reals. To limit the search space
+    we can add constraints.
+
+    <pre>
+dvar float x
+maximize x
+constraints {
+  x &lt;= 3
+}</pre>
+
+    By constraining x to be lower than 3, the problem has an optimal
+    solution, that appens to be for x = 3. We now have seen the 3
+    main parts of an optal script: the names declarations, the
+    goal and the constraints. They must appear in that order.
+
+    <h3>Simple production problem</h3>
+
+    Giapetto wants to know how many numbers of wooden trains and
+    soldiers he should build each week to maximize its profit.
+
+    <pre>// Giapetto build and sell wooden trains and soldiers
+dvar int soldier
+dvar int train
+
+/* He wants to maximize its profit.
+   A soldier costs 3¤ and a train 2¤. */
+ maximize 3 * soldier + 2 * train
+
+constraints {
+  // He builds a positive number of soldiers and trains
+  soldier &gt;= 0;
+  train &gt;= 0;
+
+  /* He has a finite amount of time: he works 5 days per week
+     and works 7 hours per day.
+     A train takes 1 hour to build and soldiers, a bit more */
+  1.85 * soldier + train &lt;= 5 * 7 ;
+
+  /* A soldier and a train takes 1 unit of wood to build and
+     giapetto buys 30 each week */
+  soldier + train &lt;= 30;
+}</pre>
+
+    <h3>Using iterators</h3>
+
+    It is possible to use forall and sum keywords to simplify big
+    scripts.
+
+    forall allows to define a set of constraints, sum simplifies
+    writing big constraints. More details on those syntax is explained
+    later.
+
+    <pre>dvar int soldier
+dvar int train
+
+alias Products = &lt; soldier, train &gt;
+// an array containing the variables soldier and train
+alias Times = &lt; 1.85, 1 &gt;
+alias Wood = &lt; 1, 1 &gt;
+alias Profit = &lt; 3, 2 &gt;
+alias index = indexOf(Products)
+// the array &lt;0, 1&gt;, used to iterates on other arrays
+
+maximize sum(i in index) Profit[i] * Products[i]
+// Profit[0] * Product[0] + Profit[1] * Product[1]
+
+constraints {
+  forall(prod in Products) prod &gt;= 0;
+  // Products[0] &gt;= 0 && Products[1] &gt;= 0
+  sum(i in index) Times[i] * Products[i] &lt;= 5 * 7;
+  sum(i in index) Wood[i] * Products[i] &lt;= 30;
+}</pre>
+
+    <h2>The Optal Language : a Reference</h2>
+
+    <h3>Comments</h3>
+
+    OPTAL has C style comments with /* */ and //.
+
+    <pre>/* a comment /* some imbricated comment */ end of the comment */</pre>
+    <pre>maximize 1 // the end of the line is a comment</pre>
+
+    <h3>Basic types</h3>
+
+    The basics types of OPTAL are: bool, int, floats,
+    linear expression and linear constraints.
+
+    <h4>Integers</h4>
+
+    Integers expressions are integer constants and operator between integers.
+    <pre>6 * (1 + 3) - 5</pre>
+    Division is not allowed between integers.
+
+    <h4>Floats</h4>
+
+    Floats expressions are float constants and operators between floats.
+    <pre>6. * (1.3 + 3.) - 5.2 / 12.2</pre> operators between integers
+    and floats are authorised and behave as operation on floats.
+
+    <h4>Bool</h4>
+
+    The basics boolean expressions are the constants true and false,
+    and combinations using not && and ||
+    <pre>true || false && not false</pre>
+
+    Arithmetic expressions on booleans are authorized and converted to
+    integers, false is converted to 0 and true to 1.
+
+    Boolean expressions are also the results of comparison between integers,
+    floats and booleans. Those are true expressions
+
+    <pre>1 &lt;= 2
+2 == 2
+4 &gt;= 3
+3 != 2
+3 &lt; 3.1
+true &gt; false</pre>
+
+    <h4>Linear expressions</h4>
+
+    Basic linear expressions are constant integers or floats, or variables
+    declared by
+    <pre>dvar float some_float_var
+dvar int some_int_var
+dvar bool some_bool_var</pre>
+
+    arithmetic expressions between linear expression and float or ints are
+    linear expressions.
+
+    <pre>3 * some_float_var
+ 2. + some_int_var</pre>
+
+    Sum and difference between linear expressions are linear expressions.
+
+    <pre>3 * some_float_var + 2 * some_int_var - some_bool_var</pre>
+
+    Notice that product of linear expressions are forbidden.
+
+    <h4>Linear constraints</h4>
+
+    Linear constraints are the results of comparison between linear expression.
+
+    <pre>3 * some_float_var &lt;= 2 * some_int_var
+3 * some_float_var == 3
+3 * some_float_var &gt;= 3</pre>
+
+    Comparisons using != &gt; and &lt; are not authorised.
+
+    Linear constraints can be combined using &&
+
+    <pre>3 * some_float_var &lt;= 2 * some_int_var &&
+3 * some_float_var &gt;= 3</pre>
+
+    <h4>symbols</h4>
+
+    Symbols are names declared by the syntax
+
+    <pre>`symbol</pre>
+
+    <h3>Structured types</h3>
+
+    OPTAL has 2 types of structured types, arrays and maps.
+
+    <h4>Arrays</h4>
+    Arrays are dense integer indexed data. Arrays can be built using the syntax:
+    <pre>&lt; 1, 2, 3 &gt;</pre>
+    Access to array elements is done through the syntax
+    <pre>&lt; 1, 2, 3 &gt;[1]</pre>
+    This returns 2, the first index is 0.
+
+    <h4>Maps</h4>
+
+    Maps are sparse data indexed by any value, but are accessible
+    using symbols. Maps indexed by symbols can be declared using the
+    syntax:
+    <pre>{ name1 : 3, name2 : 4 }</pre>
+    Access to symbol indexed maps is done through the syntax
+    <pre>{ name1 : 3, name2 : 4 }.name1</pre>
+
+    Maps indexed by other types than symbols can be accessed through
+    the [] syntax.
+    <pre>{ name1 : 3, name2 : 4 }[`name1]</pre>
+
+    For instance if <code>map</code> is indexed by arrays of size 2,
+    it can be accessed using.
+    <pre>map[&lt;1,2&gt;]</pre>
+
+    <h3>Patter operators</h3>
+    <h4>Sum</h4>
+
+    Sum allows to evaluate an expression for each elements of an
+    array or and object and do the sum of the results.
+
+    <pre>sum(x in &lt;1,2,3&gt;) (x * 3)</pre> or
+    <pre>sum(x in {a:1,b:2,c:3}) (x * 3)</pre>
+    are equivalent to
+    <pre>(1 * 3) + (2 * 3) + (3 * 3)</pre>
+
+    The parameter of sum is a set of patterns binding variables names to values.
+    <pre>sum(x in &lt;1,2&gt;, y in &lt;3,4&gt;) (x + y)</pre>
+    wich is equivalent to
+    <pre>sum(x in &lt;1,2&gt;) sum(y in &lt;3,4&gt;) (x + y)</pre>
+    or <pre>sum(x, y in &lt;1,2&gt;) (x + y)</pre>
+    is equivalent to
+    <pre>sum(x in &lt;1,2&gt;) sum(y in &lt;1,2&gt;) (x + y)</pre>
+
+    A single pattern can bind multiple variables:
+
+    <pre>sum(&lt;x,y&gt; in &lt;&lt;1,3&gt;, &lt;2,4&gt;&gt;) (x + y)</pre> is
+    <pre>sum(x in &lt;1,2&gt;) sum(y in &lt;3,4&gt;) (x + y)</pre>
+
+    Patterns can be constrained. The expression is evaluated only when the
+    constraint is satisfied.
+    <pre>sum(x in &lt;1,2,3&gt;: x != 2) x * 3</pre> is equivalent to
+    <pre>(1 * 3) + (3 * 3)</pre>
+
+    It is possible to use implicit equality constraints
+    <pre>sum(x in &lt;1,2&gt;, x &lt;2,3&gt;) (x * 3)</pre> is equivalent to
+    <pre>sum(x in &lt;1,2&gt;, y &lt;2,3&gt;: x == y) (x * 3)</pre>
+
+    <h4>Forall</h4>
+
+    Forall is like sum but the union operator is && instead of +.
+    <pre>forall(x in &lt;1,2&gt;) (x >= 2)</pre> is
+    <pre>(1 >= 2) && (2 >= 2)</pre>
+
+    <h3>Other functions</h3>
+    <h4>range</h4>
+
+    The range binary operator takes two integers (a,b) and returns the array
+    of integers between a and b.
+
+    <pre>1 .. 3</pre> is the array <pre> &lt;1, 2, 3&gt; </pre>
+
+    <h4>indexOf</h4>
+
+    The indexOf function takes an array or a map and returns the array of the
+    index.
+
+    If arr is an array or a map.
+    <pre>sum(x in indexOf(arr)) arr[x]</pre> is equivalent to
+    <pre>sum(x in arr) x</pre>
+
+    <h4>Max</h4>
+
+    Max returns the biggest value of an integer collection.
+    <pre>Max(<1,2,3>)</pre> is 3
+
+    <h4>Last</h4>
+
+    Returns the last index of an array, i.e. the length - 1
+    <pre>Last(&lt;0,0,0&gt;)</pre> is 2
+
+    <h3>Alias</h3>
+
+    It is possible to declare some alias for expressions
+
+    <pre>alias x = 3 * 4</pre>
+    <pre>alias y = x + 2</pre>
+
+    It is not possible to redeclare already declared variables.
+
+    <h3>Variables</h3>
+
+    Linear variables can be declared by the dvar keyword with a type associated.
+    <pre>dvar float some_float_var</pre>
+
+    A set of variables can be declared by the syntax
+
+    <pre>dvar float var_set[set]</pre>
+
+    If set is a collection containing integers var_set is an array
+    indexed by the elements of set, otherwise it will be a map. For
+    arrays, index must be consecutive and starting with 0.
+
+</div>
+</div>
+
+<div class="footer">
+  <div class="container">
+
+
+  <div class="copyright">
+    © 2013-2014 OCamlPro SAS, All rights reserved.
+    <a href="mailto:contact@ocamlpro.com">Contact an administrator</a>.
+    <a href="http://www.ocamlpro.com/company/legal.html">Legal</a>
+  </div>
+  </div>
+</div>
+
+  </body>
+</html>
